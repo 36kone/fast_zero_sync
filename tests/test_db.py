@@ -1,14 +1,23 @@
+from dataclasses import asdict
+
 from sqlalchemy import select
 
 from fast_zero.models import User
 
 
-def test_create_user(session):
-    user = User(username='kone', email='kone@email.com', password='senha_legal')
+def test_create_user(session, mock_db_time):
+    with mock_db_time(model=User) as time:
+        new_user = User(username='test', password='secret', email='teste@test')
+        session.add(new_user)
+        session.commit()
 
-    session.add(user)
-    session.commit()
+    user = session.scalar(select(User).where(User.username == 'test'))
 
-    result = session.scalar(select(User).where(User.email == 'kone@email.com'))
-
-    assert result.username == 'kone'
+    assert asdict(user) == {
+        'id': 1,
+        'username': 'test',
+        'password': 'secret',
+        'email': 'teste@test',
+        'created_at': time,
+        'updated_at': time,
+    }
