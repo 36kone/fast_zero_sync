@@ -75,7 +75,23 @@ def user(session):
 
 
 @pytest.fixture
+def other_user(session):
+    pwd = 'test2'
+
+    other_user = User(username='test2', email='test2@test.com', password=get_password_hash(pwd))
+    session.add(other_user)
+    session.commit()
+    session.refresh(other_user)
+
+    other_user.clean_password = pwd
+
+    return other_user
+
+
+@pytest.fixture
 def token(client, user):
-    response = client.post('/token', data={'username': user.email, 'password': user.clean_password})
+    response = client.post(
+        '/auth/token', data={'username': user.email, 'password': user.clean_password}
+    )
 
     return response.json()['acess_token']
