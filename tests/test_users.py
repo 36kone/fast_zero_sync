@@ -75,16 +75,16 @@ def test_get_user_with_user(client, user, token):
     assert response.json() == {'users': [user_schema]}
 
 
-def test_get_user_should_return_not_foun(client, token):
+def test_get_user_should_return_not_found(client, token):
     response = client.get('/users/666', headers={'Authorization': f'Bearer {token}'})
 
     assert response.status_code == HTTPStatus.NOT_FOUND
     assert response.json() == {'detail': 'User not found'}
 
 
-def test_update_user(client, user, token):
+def test_update_user(client, other_user, token):
     response = client.put(
-        f'/users/{user.id}',
+        f'/users/{other_user.id}',
         headers={'Authorization': f'Bearer {token}'},
         json={
             'username': 'bob',
@@ -96,7 +96,7 @@ def test_update_user(client, user, token):
     assert response.json() == {
         'username': 'bob',
         'email': 'bob@example.com',
-        'id': user.id,
+        'id': other_user.id,
     }
 
 

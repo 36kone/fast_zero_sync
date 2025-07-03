@@ -53,6 +53,8 @@ pytest = "^8.4.1"
 pytest-cov = "^6.2.1"
 taskipy = "^1.14.1"
 pylance = "^0.30.0"
+factory-boy = "^3.3.3"
+freezegun = "^1.5.2"
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]
